@@ -1,8 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Replace checkout link with the one provided in the request
-  const ctaLink = document.getElementById('cta-link');
-  if (ctaLink) {
-    ctaLink.href = "link_para_o_checkout";
+  // Modal Elements
+  const modal = document.getElementById('modal-downsell');
+  const noOfferLink = document.getElementById('no-offer-link');
+  const noOfferFinal = document.getElementById('no-offer-final');
+
+  // Show Modal on clicking the "No thanks" link
+  if (noOfferLink) {
+    noOfferLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.style.display = 'block';
+    });
+  }
+
+  // Final Rejection in Modal -> Redirect to Thank You Page
+  if (noOfferFinal) {
+    noOfferFinal.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.add('closing');
+      setTimeout(() => {
+        window.location.href = 'obrigado.html';
+      }, 400);
+    });
   }
 
   // Animation on scroll
@@ -18,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, observerOptions);
 
-  // Apply to relevant sections
   const elements = document.querySelectorAll('.benefit-card, .glass-section, .price-tag');
   elements.forEach(el => {
     el.style.opacity = '0';
@@ -27,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(el);
   });
 
-  // Adding the 'visible' class styles dynamically
   const style = document.createElement('style');
   style.innerHTML = `
     .visible {
@@ -37,10 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.head.appendChild(style);
 
-  // Simple countdown to increase urgency (fictional timer)
-  const timerDuration = 599; // 10 minutes
+  // Timer Configuration (Exactly 5 Minutes)
+  const timerDuration = 300; // 5 minutes
   let timeRemaining = timerDuration;
-  
+
   const createTimerElement = () => {
     const timerDiv = document.createElement('div');
     timerDiv.id = 'countdown-timer';
@@ -48,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      padding: 1rem 1.5rem;
+      padding: 0.8rem 1.2rem;
       background: var(--secondary);
       color: #000;
       border-radius: 12px;
@@ -58,12 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.1rem;
       border: 2px solid white;
+      transition: all 0.3s ease;
     `;
     timerDiv.innerHTML = `
-      <span style="font-size: 0.75rem; text-transform: uppercase;">Oferta Expira Em:</span>
-      <span id="timer-display" style="font-size: 1.5rem;">10:00</span>
+      <span style="font-size: 0.65rem; text-transform: uppercase;">A Oferta Expira Em:</span>
+      <span id="timer-display" style="font-size: 1.5rem;">05:00</span>
     `;
     document.body.appendChild(timerDiv);
   }
@@ -73,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateTimer = () => {
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
-    document.getElementById('timer-display').textContent = 
+    document.getElementById('timer-display').textContent =
       `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
+
     if (timeRemaining > 0) {
       timeRemaining--;
     } else {
